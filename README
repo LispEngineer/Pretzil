@@ -1,0 +1,34 @@
+;;;
+;;; README for PRETZIL
+;;;
+
+PRETZIL stands for PRETZIL Realizes Emulation of The Z-machine
+In Lisp, a name chosen to be a deliberate misspelling of a word
+to make it easy to search for in Google. Unfortunately, it seems
+to be a rather popular misspelling. The basic system was
+conceived and developed over the course of a week or so in
+February 2005. When development stopped, it could handle much of
+the Z3 spec, parts of Z4, had some hooks in place to support Z5,
+Z6, Z7, and Z8 in the instruction decoder and a few key memory
+functions, and had a very basic GUI using McCLIM. Just where it
+is today, actually.
+
+The only changes between where I left off in late February 2005
+and this release are that I added a .asd file for the system and
+wrote this README. This is still, in many ways, prototype code.
+Were I to continue development at this point I would probably
+spend a day or so cleaning things up.
+
+Installation is your usual deal. Unpack the tarball, symlink
+pretzil.asd to somewhere on your central registry. Or just load
+the system definition manually when you want to use it. To start
+the emulator / interpreter, call ZC-GUI::RUN-ZCODE-DEMO with the
+name of the game file to run. Again, at this point only Z3 games
+will work (Zork, Zork II, Zork III, Wishbringer, The Hitchhikers
+Guide, Leather Goddesses, etc. Basically, anything pre-AMFV.)
+
+-- Alastair Bridgewater, February 24th, 2006.
+
+Online source: http://lisphacker.com/projects/pretzil/
+
+;;; EOF

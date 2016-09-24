@@ -1,0 +1,25 @@
+Notes on the Design of a Z-Machine Interpreter in Lisp
+Alastair Bridgewater
+
+February 16th, 2005.
+
+
+The basic idea is for a Z-Machine interpreter written in CL and using CLIM for the UI. As the machine design is fairly complex and certain versions of the machine involve some fairly advanced features the initial goal is to emulate enough of the Z3 machine to get the minizork demo to put something on the screen. The next goal will be to be able to play part of the minizork demo. After the minizork demo is playable, other Z3 games should be tracked down and made to work. Once Z3 is basically working then we can consider other versions of the Z-Machine.
+
+Phase 1: Get minizork.z3 to display its startup banner.
+Phase 2: Get minizork.z3 to be able to read and interpret commands.
+Phase 3: Find more Z3 games to play (Zork, Zork II, Wishbringer, etc.)
+Phase 4: Get AMFV to be playable.
+Phase 5: Find some Z5 games to make work.
+
+
+Obvious internal data structures:
+
+We're going to need an image of the game file. This will be an array of (unsigned-byte 8). In order to accommodate saving and whatnot, we will use a separate array which contains a copy of the writable data area of the game file (the "dynamic memory"). We also require a stack, which will be an array of (unsigned-byte 16) with a fill-pointer. The stack will start with space for 1024 entries. Pushing to the stack will be done with VECTOR-PUSH-EXTEND.
+
+In order to accommodate the Quetzal save format more easily, each call frame will reserve 4 words on the stack for control data, but the actual control data will be stored in a separate list. The control data for each frame must include the return PC, discard-result flag, result-variable number, number (or bitmap?) of arguments supplied, and frame pointer within the stack. Functions will be needed to encode the frame data into the stack prior to writing out a Quetzal file and to restore the frame data from the stack after reading in a Quetzal file.
+
+This should be sufficient design to get at least -something- on the screen.
+
+
+EOF
