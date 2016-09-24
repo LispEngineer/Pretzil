@@ -589,6 +589,15 @@ all of the games written by the IF community).
     ((/= #xb0 (logand opcode #xf0))
      (vector-push (read-one-operand (ldb (byte 2 4) opcode)) *operands*))))
 
+(defvar *pc-log* nil) ; DPF
+
+;; DPF
+(defun save-pc-log (fn)
+  (with-open-file (s fn :direction :output :if-exists :supersede)
+    (let ((*print-base* 16))
+      (write (reverse *pc-log*) :stream s)
+      t)))
+  
 (defun zcode-step ()
   (let* ((instruction-pc *current-pc*)
 	 (instruction-sp (fill-pointer *data-stack*))
@@ -598,9 +607,12 @@ all of the games written by the IF community).
 
     (parse-instruction-operands opcode)
 
-    #+(or)
-    (format t "Addr: ~X, instr: ~X, args ~A~%"
-	    instruction-pc opcode *operands*)
+    (push (list instruction-pc (map 'list #'identity *operands*)) *pc-log*)
+
+    (when (or (= instruction-pc #x6C40)
+              (= instruction-pc #x6C3C))
+      (format t "Addr: ~X, instr: ~X, args ~A~%"
+              instruction-pc opcode *operands*))
 
     (restart-case
 	(progn
@@ -617,6 +629,7 @@ all of the games written by the IF community).
 	nil))))
 
 (defun zcode-run ()
+  (setf *pc-log* nil)
   (loop while (zcode-step)))
 
 

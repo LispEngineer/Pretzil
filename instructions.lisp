@@ -293,9 +293,8 @@
   (setf (object-parent child) new-parent)
 
   ;; Link the object into the sibling chain.
-  (setf (object-sibling child)
-	(object-child new-parent))
-  (setf (object-child new-parent) child))
+  (setf (object-sibling child)      (object-child new-parent))
+  (setf (object-child   new-parent)  child))
 
 (define-instruction loadw
     (2op #x0f :store result-var :arg0 array :arg1 word-index)
@@ -384,13 +383,15 @@
 	(write-z-byte prop-addr (logand #xff value))
 	(write-z-word prop-addr value))))
 
+(defun update-status-bar ()) ; DPF
+
 (define-instruction read
     (var #x04 :version (:v3 :v4) :check-argcount 2 :arg0 text-buffer :arg1 token-buffer)
   (if (<= *machine-version* 3)
       (update-status-bar))
   
   ;; Read input from user using CLIM:ACCEPT and stuff it in the text buffer.
-  (let* ((input (clim:accept 'string :prompt nil :default ""))
+  (let* ((input (read-line)) ; DPF
 	 (buflen (read-z-byte text-buffer)))
     (dotimes (i (min buflen (length input)))
       (write-z-byte (+ text-buffer i 1)
